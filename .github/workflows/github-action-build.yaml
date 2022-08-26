@@ -1,5 +1,6 @@
 name: backend-release
-on: [workflow_call]
+on:
+  workflow_call:
 jobs:
   buildDocker:
     runs-on: ubuntu-latest

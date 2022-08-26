@@ -1,5 +1,6 @@
 name: backend-test
-on: [workflow_call]
+on:
+  workflow_call:
 jobs:
   Test:
     runs-on: ubuntu-latest
