@@ -28,8 +28,9 @@ jobs:
           password: ${{ secrets.B2P_ACR_TOKEN }}
       - name: SONARQUBE SCAN
         if: "contains(github.ref_name, 'SONAR')"
-        run: ./gradlew sonarqube -Dsonar.login=${{ secrets.B2P_SONARQUBE_TOKEN }} -Dsonar.projectName=${{ github.ref_name }} -Dsonar.projectKey=${{ secrets.B2P_SERVICENAME }}
+        run: ./gradlew sonarqube -Dsonar.login=${{ secrets.B2P_SONARQUBE_TOKEN }} -Dsonar.projectName=${{ github.ref_name }} -Dsonar.projectKey=${{ secrets.SERVICENAME }}
       - name: BUILD IMAGE
         if: "!contains(github.ref_name, 'SONAR')"
-        run: ./gradlew jib --image=${B2P_ACR_REGISTRY}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
+        run: ./gradlew jib --image=b2papp.azurecr.io/b2p/fileservice:${{ github.ref_name }}
+        # run: ./gradlew jib --image=${B2P_ACR_REGISTRY}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
 
