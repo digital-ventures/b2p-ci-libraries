@@ -18,7 +18,6 @@ jobs:
           # token: ${{ secrets.B2P_GIT_TOKEN }}
       - name: Git Submodule
         run: |
-          git config --global --add safe.directory /__w/b2p-${SERVICENAME}/b2p-${SERVICENAME}
           git submodule add --force https://${B2P_GIT_USER}:${B2P_GIT_TOKEN}@github.com/digital-ventures/b2p-common.git
           git submodule update --remote -f --init
       - name: Docker Login
