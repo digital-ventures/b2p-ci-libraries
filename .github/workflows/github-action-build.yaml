@@ -18,7 +18,7 @@ jobs:
           # token: ${{ secrets.B2P_GIT_TOKEN }}
       - name: Git Submodule
         run: |
-          git submodule add --force https://${B2P_GIT_USER}:${B2P_GIT_TOKEN}@github.com/digital-ventures/b2p-common.git
+          git submodule add --force https://${B2P_GIT_USER}:${{ secrets.B2P_GIT_TOKEN }}@github.com/digital-ventures/b2p-common.git
           git submodule update --remote -f --init
       - name: Docker Login
         uses: azure/docker-login@v1
