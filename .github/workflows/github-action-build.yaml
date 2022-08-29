@@ -9,7 +9,10 @@ jobs:
     container: openjdk:17-jdk-alpine3.14
     steps:
       - uses: actions/checkout@v3
-      - run : echo ${SERVICENAME}
+      - name: debug
+        run : |
+          echo ${SERVICENAME}
+          echo ${B2P_ACR_REGISTRY}
       - name: Add APK
         run: apk --no-cache add git
       - run: git config --global --add safe.directory /__w/b2p-${SERVICENAME}/b2p-${SERVICENAME}
