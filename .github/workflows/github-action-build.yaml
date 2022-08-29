@@ -11,7 +11,7 @@ jobs:
       - uses: actions/checkout@v3
       - name: Add APK
         run: apk --no-cache add git
-      - run: git config --global --add safe.directory /__w/b2p-${{ secrets.SERVICENAME }}/b2p-${{ secrets.SERVICENAME }}
+      - run: git config --global --add safe.directory /__w/b2p-${{ secrets.B2P_SERVICENAME }}/b2p-${{ secrets.B2P_SERVICENAME }}
       - uses: actions/checkout@v3
         with:
           submodules: recursive
@@ -28,8 +28,8 @@ jobs:
           password: ${{ secrets.B2P_ACR_TOKEN }}
       - name: SONARQUBE SCAN
         if: "contains(github.ref_name, 'SONAR')"
-        run: ./gradlew sonarqube -Dsonar.login=${{ secrets.B2P_SONARQUBE_TOKEN }} -Dsonar.projectName=${{ github.ref_name }} -Dsonar.projectKey=${{ secrets.SERVICENAME }}
+        run: ./gradlew sonarqube -Dsonar.login=${{ secrets.B2P_SONARQUBE_TOKEN }} -Dsonar.projectName=${{ github.ref_name }} -Dsonar.projectKey=${{ secrets.B2P_SERVICENAME }}
       - name: BUILD IMAGE
         if: "!contains(github.ref_name, 'SONAR')"
-        run: ./gradlew jib --image=${B2P_ACR_REGISTRY}/b2p/${{ secrets.SERVICENAME }}:${{ github.ref_name }}
+        run: ./gradlew jib --image=${B2P_ACR_REGISTRY}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
 
