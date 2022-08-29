@@ -1,8 +1,6 @@
 name: backend-release
 on:
   workflow_call:
-# permissions:
-#   pull-requests: write
 jobs:
   buildDocker:
     runs-on: ubuntu-latest
@@ -26,10 +24,10 @@ jobs:
           login-server: ${{ secrets.B2P_ACR_REGISTRY }}
           username: ${{ secrets.B2P_ACR_USER }}
           password: ${{ secrets.B2P_ACR_TOKEN }}
-      - name: SONARQUBE SCAN
-        if: "contains(github.ref_name, 'SONAR')"
-        run: ./gradlew sonarqube -Dsonar.login=${{ secrets.B2P_SONARQUBE_TOKEN }} -Dsonar.projectName=${{ github.ref_name }} -Dsonar.projectKey=${{ secrets.SERVICENAME }}
-      - name: BUILD IMAGE
-        if: "!contains(github.ref_name, 'SONAR')"
-        run: ./gradlew jib --image=${{ secrets.B2P_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
+      - name: TEST
+        run: |
+          apk add --no-cache ttf-dejavu fontconfig 
+          ln -s /usr/lib/libfontconfig.so.1 /usr/lib/libfontconfig.so && ln -s /lib/libuuid.so.1 /usr/lib/libuuid.so.1 && ln -s /lib/libc.musl-x86_64.so.1 /usr/lib/libc.musl-x86_64.so.1
+          LD_LIBRARY_PATH=/usr/lib
+          ./gradlew clean test
 

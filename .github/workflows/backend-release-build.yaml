@@ -1,0 +1,33 @@
+name: backend-release
+on:
+  workflow_call:
+jobs:
+  buildDocker:
+    runs-on: ubuntu-latest
+    container: openjdk:17-jdk-alpine3.14
+    steps:
+      - uses: actions/checkout@v3
+      - name: Add APK
+        run: apk --no-cache add git
+      - run: git config --global --add safe.directory /__w/b2p-${{ secrets.B2P_SERVICENAME }}/b2p-${{ secrets.B2P_SERVICENAME }}
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+          token: ${{ secrets.B2P_GIT_TOKEN }}
+      - name: Git Submodule
+        run: |
+          git submodule add --force https://${{ secrets.B2P_GIT_USER }}:${{ secrets.B2P_GIT_TOKEN }}@github.com/digital-ventures/b2p-common.git
+          git submodule update --remote -f --init
+      - name: Docker Login
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ secrets.B2P_ACR_REGISTRY }}
+          username: ${{ secrets.B2P_ACR_USER }}
+          password: ${{ secrets.B2P_ACR_TOKEN }}
+      - name: SONARQUBE SCAN
+        if: "contains(github.ref_name, 'SONAR')"
+        run: ./gradlew sonarqube -Dsonar.login=${{ secrets.B2P_SONARQUBE_TOKEN }} -Dsonar.projectName=${{ github.ref_name }} -Dsonar.projectKey=${{ secrets.SERVICENAME }}
+      - name: BUILD IMAGE
+        if: "!contains(github.ref_name, 'SONAR')"
+        run: ./gradlew jib --image=${{ secrets.B2P_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
+
