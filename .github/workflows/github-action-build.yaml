@@ -15,25 +15,21 @@ jobs:
       - uses: actions/checkout@v3
         with:
           submodules: recursive
-          token: ${{ secrets.B2P_GIT_TOKEN }}
+          token: ${B2P_GIT_TOKEN}
       - name: Git Submodule
         run: |
-          git submodule add --force https://b2p-devops:${{ secrets.B2P_GIT_TOKEN }}@github.com/digital-ventures/b2p-common.git
+          git submodule add --force https://${B2P_GIT_USER}:${B2P_GIT_TOKEN}@github.com/digital-ventures/b2p-common.git
           git submodule update --remote -f --init
       - name: Docker Login
         uses: azure/docker-login@v1
         with:
-          login-server: b2papp.azurecr.io
-          username: b2papp
-          password: ${{ secrets.B2P_ACR_TOKEN }}
-      # - name: Remove "application.properties"
-      #   run: |
-      #     find ./src/main/resources -name "application.yml" -exec rm {} \;
-      #     find ./src/main/resources -name "application.properties" -exec rm {} \;
+          login-server: ${B2P_ACR_REGISTRY}
+          username: ${B2P_ACR_USER}
+          password: ${B2P_ACR_TOKEN}
       - name: SONARQUBE SCAN
         if: "contains(github.ref_name, 'SONAR')"
-        run: ./gradlew sonarqube -Dsonar.login=${{ secrets.B2P_SONARQUBE_TOKEN }} -Dsonar.projectName=${{ github.ref_name }} -Dsonar.projectKey=${SERVICENAME}
+        run: ./gradlew sonarqube -Dsonar.login=${B2P_SONARQUBE_TOKEN} -Dsonar.projectName=${{ github.ref_name }} -Dsonar.projectKey=${SERVICENAME}
       - name: BUILD IMAGE
         if: "!contains(github.ref_name, 'SONAR')"
-        run: ./gradlew jib --image=b2papp.azurecr.io/b2p/${SERVICENAME}:${{ github.ref_name }}
+        run: ./gradlew jib --image=${B2P_ACR_REGISTRY}/b2p/${SERVICENAME}:${{ github.ref_name }}
 
