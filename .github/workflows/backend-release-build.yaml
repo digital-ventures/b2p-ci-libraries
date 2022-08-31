@@ -1,7 +1,7 @@
 on:
   workflow_call:
 jobs:
-  buildDocker:
+  ReleaseBuild:
     runs-on: ubuntu-latest
     container: openjdk:17-jdk-alpine3.14
     steps:
