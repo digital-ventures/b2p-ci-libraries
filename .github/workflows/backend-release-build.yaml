@@ -25,7 +25,7 @@ jobs:
           username: ${{ secrets.B2P_ACR_USER }}
           password: ${{ secrets.B2P_ACR_TOKEN }}
       - name: SonarQubeScan
-        if: "contains(github.ref_name, 'SONAR')"
+        if: contains(github.ref_name, 'SONAR')
         run: ./gradlew sonarqube -Dsonar.login=${{ secrets.B2P_SONARQUBE_TOKEN }} -Dsonar.projectName=${{ github.ref_name }} -Dsonar.projectKey=${{ secrets.SERVICENAME }}
       - name: BuildImage
         if: "!contains(github.ref_name, 'SONAR')"
