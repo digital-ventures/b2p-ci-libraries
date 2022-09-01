@@ -23,14 +23,15 @@ on:
   #     - skaffold.yml
 
 jobs:
-  test:
-    name: test
-    if: github.ref != 'refs/heads/master' || contains( github.ref_name, 'release' ) 
-    uses: digital-ventures/b2p-ci-libraries/.github/workflows/ci-backend-test.yaml@master
-    secrets: inherit
+  # test:
+  #   name: test
+  #   # if: github.ref != 'refs/heads/master' || contains( github.ref_name, 'release' ) 
+  #   uses: digital-ventures/b2p-ci-libraries/.github/workflows/ci-backend-test.yaml@master
+  #   secrets: inherit
   release:
     name: release
     uses: digital-ventures/b2p-ci-libraries/.github/workflows/ci-backend-build.yaml@master
-    if: github.ref_name != '' && github.event_name == 'pull_request'
+    if: github.ref == 'tag' && github.ref_name != ''
+    # if: github.ref_name != '' && github.event_name == 'pull_request'
     secrets: inherit
 
