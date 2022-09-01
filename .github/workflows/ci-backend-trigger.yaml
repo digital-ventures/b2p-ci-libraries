@@ -1,0 +1,36 @@
+on:
+  workflow_call:
+  workflow_run:
+    workflows: ["Build"]
+    # branches:
+    #   - 'deployment'
+    #   - '**release**'
+    # tags-ignore:
+    #   - ""
+  # pull_request_target:
+  #   branches-ignore:
+  #     - 'deployment'
+  # push: 
+  #   paths:
+  #     - gradle/**/*
+  #     - manifests/**/*
+  #     - src/**/*
+  #     - build.gradle.kts
+  #     - gradle.properties
+  #     - gradlew
+  #     - gradlew.bat
+  #     - settings.gradle.kts
+  #     - skaffold.yml
+
+jobs:
+  test:
+    name: test
+    if: github.ref != 'refs/heads/master' || contains( github.ref_name, 'release' ) 
+    uses: digital-ventures/b2p-ci-libraries/.github/workflows/ci-backend-test.yaml@master
+    secrets: inherit
+  release:
+    name: release
+    uses: digital-ventures/b2p-ci-libraries/.github/workflows/ci-backend-build.yaml@master
+    if: github.ref_name != '' && github.event_name == 'pull_request'
+    secrets: inherit
+
