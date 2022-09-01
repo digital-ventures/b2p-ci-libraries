@@ -1,16 +1,5 @@
 on:
   workflow_call:
-  push:
-    branches-ignore:
-      - '**'
-    tags-ignore:
-      - '**'
-  pull_request:
-    branches-ignore:
-      - '**'
-    tags-ignore:
-      - '**'
-  workflow_dispatch:
 jobs:
   Test:
     runs-on: ubuntu-latest

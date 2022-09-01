@@ -1,8 +1,5 @@
 on:
   workflow_call:
-  push:
-    tags:
-      - '**'
 jobs:
   BuildAndRelease:
     runs-on: ubuntu-latest
