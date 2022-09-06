@@ -26,5 +26,6 @@ jobs:
           password: ${{ secrets.B2P_ACR_TOKEN }}
       - name: BuildImage
         # if: "!contains(github.ref_name, 'SONAR')"
-        run: ./gradlew jib --image=${{ secrets.B2P_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
-
+        run: |
+          ./gradlew jib --image=${{ secrets.B2P_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
+          echo -e "\e[92m ${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }} \e[0m"
