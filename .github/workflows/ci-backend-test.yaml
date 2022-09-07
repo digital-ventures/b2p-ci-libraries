@@ -2,7 +2,8 @@ on:
   workflow_call:
 jobs:
   Test:
-    runs-on: ubuntu-latest
+    # runs-on: ubuntu-latest
+    runs-on: [self-hosted, b2p]
     container: openjdk:17-jdk-alpine3.14
     steps:
       - uses: actions/checkout@v3
@@ -15,6 +16,7 @@ jobs:
           token: ${{ secrets.B2P_GIT_TOKEN }}
       - name: Git Submodule
         run: |
+          rm -rf b2p-common
           git submodule add --force --name b2p-common https://${{ secrets.B2P_GIT_USER }}:${{ secrets.B2P_GIT_TOKEN }}@github.com/digital-ventures/b2p-common.git b2p-common 
           git submodule update --remote -f --init
           git submodule add --force --name b2p-common https://github.com/digital-ventures/b2p-common.git b2p-common 
