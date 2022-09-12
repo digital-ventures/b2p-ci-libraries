@@ -11,9 +11,9 @@ jobs:
         run: apk --no-cache add git tar
       - run: git config --global --add safe.directory /__w/b2p-${{ secrets.B2P_SERVICENAME }}/b2p-${{ secrets.B2P_SERVICENAME }}
       - uses: actions/checkout@v3
-        with:
-          submodules: recursive
-          token: ${{ secrets.B2P_GIT_TOKEN }}
+        # with:
+        #   submodules: recursive
+        #   token: ${{ secrets.B2P_GIT_TOKEN }}
       - name: GitSubmodule
         run: |
           rm -rf b2p-common
