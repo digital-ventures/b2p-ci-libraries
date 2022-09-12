@@ -8,7 +8,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: AddGIT
-        run: apk --no-cache add git
+        run: apk --no-cache add git tar
       - run: git config --global --add safe.directory /__w/b2p-${{ secrets.B2P_SERVICENAME }}/b2p-${{ secrets.B2P_SERVICENAME }}
       - uses: actions/checkout@v3
         with:
@@ -22,8 +22,8 @@ jobs:
           git submodule add --force --name b2p-common https://github.com/digital-ventures/b2p-common.git b2p-common 
       - name: SetupGradle
         uses: gradle/gradle-build-action@v2
-        # with:
-        #   gradle-version: 8.0
+        with:
+          gradle-version: 7.2
       - name: DockerLogin
         uses: azure/docker-login@v1
         with:
@@ -32,10 +32,12 @@ jobs:
           password: ${{ secrets.B2P_ACR_TOKEN }}
       - name: SonarQubeScan
         if: contains(github.ref_name, 'SONAR')
-        run: ./gradlew sonarqube -Dsonar.login=${{ secrets.B2P_SONARQUBE_TOKEN }} -Dsonar.projectName=${{ github.ref_name }} -Dsonar.projectKey=${{ secrets.SERVICENAME }}
+        run: |
+          gradle sonarqube -Dsonar.login=${{ secrets.B2P_SONARQUBE_TOKEN }} -Dsonar.projectName=${{ github.ref_name }} -Dsonar.projectKey=${{ secrets.SERVICENAME }}
       - name: CleanTest
         run: |
           apk add --no-cache ttf-dejavu fontconfig 
           ln -s /usr/lib/libfontconfig.so.1 /usr/lib/libfontconfig.so && ln -s /lib/libuuid.so.1 /usr/lib/libuuid.so.1 && ln -s /lib/libc.musl-x86_64.so.1 /usr/lib/libc.musl-x86_64.so.1
           LD_LIBRARY_PATH=/usr/lib
-          ./gradlew clean test
+          gradle clean test
+

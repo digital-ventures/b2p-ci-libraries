@@ -8,7 +8,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: AddGIT
-        run: apk --no-cache add git
+        run: apk --no-cache add git tar
       - run: git config --global --add safe.directory /__w/b2p-${{ secrets.B2P_SERVICENAME }}/b2p-${{ secrets.B2P_SERVICENAME }}
       - uses: actions/checkout@v3
         with:
@@ -22,8 +22,8 @@ jobs:
           git submodule add --force --name b2p-common https://github.com/digital-ventures/b2p-common.git b2p-common 
       - name: SetupGradle
         uses: gradle/gradle-build-action@v2
-        # with:
-        #   gradle-version: 8.0
+        with:
+          gradle-version: 7.2
       - name: DockerLogin
         uses: azure/docker-login@v1
         with:
@@ -33,5 +33,5 @@ jobs:
       - name: BuildImage
         # if: "!contains(github.ref_name, 'SONAR')"
         run: |
-          ./gradlew jib --image=${{ secrets.B2P_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
+          gradle jib --image=${{ secrets.B2P_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
           echo -e "\e[92m ${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }} \e[0m"
