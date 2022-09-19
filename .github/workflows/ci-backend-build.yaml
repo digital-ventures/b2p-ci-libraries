@@ -7,29 +7,42 @@ jobs:
     container: openjdk:17-jdk-alpine3.14
     steps:
       - uses: actions/checkout@v3
+
       - name: AddGIT
         run: apk --no-cache add git tar
+
       - run: git config --global --add safe.directory /__w/b2p-${{ secrets.B2P_SERVICENAME }}/b2p-${{ secrets.B2P_SERVICENAME }}
+
       - uses: actions/checkout@v3
-        # with:
-        #   submodules: recursive
-        #   token: ${{ secrets.B2P_GIT_TOKEN }}
-      - name: GitSubmodule
-        run: |
-          rm -rf b2p-common
-          git submodule add --force --name b2p-common https://${{ secrets.B2P_GIT_USER }}:${{ secrets.B2P_GIT_TOKEN }}@github.com/digital-ventures/b2p-common.git b2p-common 
-          git submodule update --remote -f --init
-          git submodule add --force --name b2p-common https://github.com/digital-ventures/b2p-common.git b2p-common 
+        with: 
+          ssh-key: "${{ secrets.SSH_PRIVATE_KEY }}"
+          ssh-strict: 'StrictHostKeyChecking=no'
+          submodules: 'true'   #set-safe-directory option of checkout didn't work
+
+      # - uses: actions/checkout@v3
+      #   with:
+      #     submodules: recursive
+      #     token: ${{ secrets.B2P_GIT_TOKEN }}
+
+      # - name: GitSubmodule
+      #   run: |
+      #     rm -rf b2p-common
+      #     git submodule add --force --name b2p-common https://${{ secrets.B2P_GIT_USER }}:${{ secrets.B2P_GIT_TOKEN }}@github.com/digital-ventures/b2p-common.git b2p-common 
+      #     git submodule update --remote -f --init
+      #     git submodule add --force --name b2p-common https://github.com/digital-ventures/b2p-common.git b2p-common 
+
       - name: SetupGradle
         uses: gradle/gradle-build-action@v2
         with:
           gradle-version: 7.2
+
       - name: DockerLogin
         uses: azure/docker-login@v1
         with:
           login-server: ${{ secrets.B2P_ACR_REGISTRY }}
           username: ${{ secrets.B2P_ACR_USER }}
           password: ${{ secrets.B2P_ACR_TOKEN }}
+          
       - name: BuildImage
         # if: "!contains(github.ref_name, 'SONAR')"
         run: |
