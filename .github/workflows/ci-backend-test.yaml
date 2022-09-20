@@ -36,10 +36,8 @@ jobs:
           arguments: |
               sonarqube
               -Dsonar.login=${{ secrets.B2P_SONARQUBE_TOKEN }}
-              -Dsonar.projectName=B2P-${{ secrets.B2P_SERVICENAME }}
-              -Dsonar.projectKey=B2P-${{ secrets.B2P_SERVICENAME }}
-              #-Dsonar.projectName=${{ github.ref_name }}
-              #-Dsonar.projectKey=${{ secrets.B2P_SERVICENAME }}              
+              -Dsonar.projectName="B2P-${{ secrets.B2P_SERVICENAME }}"
+              -Dsonar.projectKey="B2P-${{ secrets.B2P_SERVICENAME }}"            
 
       - name: PreCleanTest
         run: |
