@@ -28,16 +28,31 @@ jobs:
           username: ${{ secrets.B2P_ACR_USER }}
           password: ${{ secrets.B2P_ACR_TOKEN }}
 
+      # - name: SonarQubeScan
+      #   if: contains(github.ref_name, 'SONAR')
+      #   uses: gradle/gradle-build-action@v2
+      #   with:
+      #     gradle-version: 7.2
+      #     arguments: |
+      #         sonarqube
+      #         -Dsonar.login=${{ secrets.B2P_SONARQUBE_TOKEN }}
+      #         -Dsonar.projectName=B2P-${{ secrets.B2P_SERVICENAME }}
+      #         -Dsonar.projectKey=${{ secrets.B2P_SERVICENAME }}        
+
       - name: SonarQubeScan
         if: contains(github.ref_name, 'SONAR')
-        uses: gradle/gradle-build-action@v2
+        uses: sonarsource/sonarqube-scan-action@master
+        env:
+          # SONAR_TOKEN: ${{ secrets.B2P_SONARQUBE_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.B2P_SONARQUBE_HOST_URL }}
+          LC_ALL: "en_US.UTF-8"
         with:
-          gradle-version: 7.2
-          arguments: |
-              sonarqube
-              -Dsonar.login=${{ secrets.B2P_SONARQUBE_TOKEN }}
-              -Dsonar.projectName=B2P-${{ secrets.B2P_SERVICENAME }}
-              -Dsonar.projectKey=${{ secrets.B2P_SERVICENAME }}        
+          projectBaseDir: src
+          args: >
+            -Dsonar.projectName=B2P-${{ secrets.B2P_SERVICENAME }}
+            -Dsonar.projectKey=${{ secrets.B2P_SERVICENAME }}    
+            -Dsonar.login=${{ secrets.B2P_SONARQUBE_TOKEN }}
+            -Dsonar.verbose=true
 
       - name: PreCleanTest
         run: |
