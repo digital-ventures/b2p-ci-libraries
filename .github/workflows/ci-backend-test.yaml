@@ -37,7 +37,7 @@ jobs:
               sonarqube
               -Dsonar.login=${{ secrets.B2P_SONARQUBE_TOKEN }}
               -Dsonar.projectName=${{ github.ref_name }}
-              -Dsonar.projectKey=${{ secrets.SERVICENAME }}
+              -Dsonar.projectKey=${{ secrets.B2P_SERVICENAME }}
 
       - name: PreCleanTest
         run: |
