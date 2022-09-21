@@ -13,7 +13,9 @@ jobs:
         with: 
           ssh-key: "${{ secrets.SSH_PRIVATE_KEY }}"
           ssh-strict: 'StrictHostKeyChecking=no'
-          # submodules: 'true'   #set-safe-directory option of checkout didn't work
+          submodules: 'true'   #set-safe-directory option of checkout didn't work
+          fetch-depth: 1  
+
 
       - name: Dump GitHub context
         env:
@@ -27,11 +29,17 @@ jobs:
           git config --global --add safe.directory /__w/b2p-${{ secrets.B2P_SERVICENAME }}/b2p-${{ secrets.B2P_SERVICENAME }}
 
       - name: GitSubmodule
-        run: |
-          git submodule add --force --name b2p-common https://${{ secrets.B2P_GIT_USER }}:${{ secrets.B2P_GIT_TOKEN }}@github.com/digital-ventures/b2p-common b2p-common
-          git submodule update --remote -f --init
-          git submodule add --force --name b2p-common ../b2p-common.git b2p-common
-        continue-on-error: true
+        run: | 
+          # git pull --recurse-submodules --depth 1 
+          git submodule update --remote --merge
+#===  bank edit
+
+      # - name: GitSubmodule
+      #   run: |
+      #     git submodule add --force --name b2p-common https://${{ secrets.B2P_GIT_USER }}:${{ secrets.B2P_GIT_TOKEN }}@github.com/digital-ventures/b2p-common b2p-common
+      #     git submodule update --remote -f --init
+      #     git submodule add --force --name b2p-common ../b2p-common.git b2p-common
+      #   continue-on-error: true
 
       - name: DockerLogin
         uses: azure/docker-login@v1
