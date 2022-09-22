@@ -29,9 +29,10 @@ jobs:
 
       - name: GitSubmodule
         run: |
+          rm -rf b2p-common
           git submodule add --force --name b2p-common https://${{ secrets.B2P_GIT_USER }}:${{ secrets.B2P_GIT_TOKEN }}@github.com/digital-ventures/b2p-common b2p-common
           git submodule update --remote -f --init
-          git submodule add --force --name b2p-common ../b2p-common.git b2p-common
+          git checkout HEAD .gitmodules
         continue-on-error: true
 
       - name: DockerLogin
