@@ -10,18 +10,18 @@ jobs:
         run: apk --no-cache add git jq tar openssh
 
       - uses: actions/checkout@v3
-        env:
-          GITHUB_WORKSPACE: /__w/workspace
         with: 
           ssh-key: "${{ secrets.SSH_PRIVATE_KEY }}"
           ssh-strict: 'StrictHostKeyChecking=no'
-          path: 'test'
+          # path: 'test'
           # submodules: 'true'   #set-safe-directory option of checkout didn't work
 
       - name: DEBUG
         run: |
-          find /__w 
-          exit 1
+          echo $GITHUB_WORKSPACE
+          echo ${{ env.GITHUB_WORKSPACE }}
+          find /__w
+          # exit 1
 
       - name: Dump GitHub context
         env:
@@ -32,8 +32,8 @@ jobs:
         run: |
           git config --global user.name ${{ secrets.B2P_GIT_USER }}
           git config --global user.email ${{ secrets.B2P_GIT_USER }}@dv.co.th
-          # git config --global --add safe.directory /__w          
-          git config --global --add safe.directory /__w/b2p-${{ secrets.B2P_SERVICENAME }}/b2p-${{ secrets.B2P_SERVICENAME }}
+          # git config --global --add safe.directory $GITHUB_WORKSPACE"
+          # git config --global --add safe.directory /__w/b2p-${{ secrets.B2P_SERVICENAME }}/b2p-${{ secrets.B2P_SERVICENAME }}
 
       - name: GitSubmodule
         run: |
