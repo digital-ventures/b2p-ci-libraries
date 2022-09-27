@@ -13,7 +13,14 @@ jobs:
         with: 
           ssh-key: "${{ secrets.SSH_PRIVATE_KEY }}"
           ssh-strict: 'StrictHostKeyChecking=no'
+          # path: 'test'
           # submodules: 'true'   #set-safe-directory option of checkout didn't work
+
+      - name: DEBUG
+        run: |
+          echo $GITHUB_WORKSPACE
+          # find /__w
+          # exit 1
 
       - name: Dump GitHub context
         env:
