@@ -32,6 +32,7 @@ jobs:
       - name: GitSubmodule
         run: |
           git pull --recurse-submodules
+        continue-on-error: true
 
       # - name: GitSubmodule
       #   run: |
