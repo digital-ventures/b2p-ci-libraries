@@ -43,7 +43,7 @@ jobs:
           context: .
           file: Dockerfile
           push: true
-          tags: ${{ secrets.B2P_ACR_REGISTRY }}/mfec/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
+          tags: ${{ secrets.B2P_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
 
       - name: BuildAndPushWithCodeScan
         if: "contains(github.ref_name, 'SONAR')"
@@ -53,4 +53,4 @@ jobs:
           file: DockerfileSonarqube
           build-args: SONARQUBE_TOKEN=${{ secrets.B2P_SONARQUBE_TOKEN }}, CI_COMMIT_TAG=${{ github.ref_name }}
           push: true
-          tags: ${{ secrets.B2P_ACR_REGISTRY }}/mfec/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
+          tags: ${{ secrets.B2P_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
