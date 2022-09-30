@@ -60,7 +60,7 @@ jobs:
       #     push: true
       #     tags: ${{ secrets.B2P_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
 
-      - name: BuildAndPush
+      - name: Build
         if: "!contains(github.ref_name, 'SONAR')"
         id: docker_build
         run:
@@ -69,6 +69,11 @@ jobs:
 
       - name: ImageDigest
         run: echo -e "\e[92m ${{ steps.docker_build.outputs.digest }} \e[0m"
+
+      - name: Push
+        if: "!contains(github.ref_name, 'SONAR')"
+        run:
+          docker push ${{ secrets.B2P_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
 
       - name: PrepareSteps (approvalui)
         if: "!contains(github.ref_name, 'SONAR') && contains(github.repository, 'admin-portal-ui')"
