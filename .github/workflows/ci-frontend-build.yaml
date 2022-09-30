@@ -36,11 +36,6 @@ jobs:
           username: ${{ secrets.B2P_ACR_USER }}
           password: ${{ secrets.B2P_ACR_TOKEN }}
 
-      - name: BuildAndPush (approvalui)
-        if: "!contains(github.ref_name, 'SONAR') && contains(github.repository, 'admin-portal-ui')"
-        run: |
-          ./prepare-approval-files.sh
-
       - name: BuildAndPush
         if: "!contains(github.ref_name, 'SONAR')"
         uses: docker/build-push-action@v3
