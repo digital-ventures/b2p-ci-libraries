@@ -4,10 +4,11 @@ jobs:
   BuildAndRelease:
     # runs-on: ubuntu-latest
     runs-on: [self-hosted, b2p]
-    container: node:16.13.0-alpine
+    # container: node:16.13.0-alpine
+    container: docker
     steps:
       - name: AddAPK
-        run: apk --no-cache add git jq tar openssh openssh-client
+        run: apk --no-cache add git jq tar openssh
 
       - uses: actions/checkout@v3
         with: 
@@ -39,28 +40,32 @@ jobs:
       - name: SetupSSH
         env:
           DOCKER_BUILDKIT: 1
-          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
         run: |
-          ssh-agent -a ${SSH_AUTH_SOCK} > /dev/null
+          eval $(ssh-agent -s)
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-add ~/.ssh/id_rsa
 
+      # - name: BuildAndPush
+      #   if: "!contains(github.ref_name, 'SONAR')"
+      #   uses: docker/build-push-action@v3
+      #   id: docker_build
+      #   env:
+      #     DOCKER_BUILDKIT: 1
+      #     SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+      #   with:
+      #     context: .
+      #     file: Dockerfile
+      #     push: true
+      #     tags: ${{ secrets.B2P_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
+
       - name: BuildAndPush
         if: "!contains(github.ref_name, 'SONAR')"
-        uses: docker/build-push-action@v3
         id: docker_build
-        env:
-          DOCKER_BUILDKIT: 1
-          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
-        with:
-          context: .
-          file: Dockerfile
-          push: true
-          tags: ${{ secrets.B2P_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
-          ssh: |
-            default=${{ env.SSH_AUTH_SOCK }}
+        run:
+          docker build --ssh default -t ${{ secrets.B2P_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }} .
+          docker push ${{ secrets.B2P_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
 
       - name: ImageDigest
         run: echo -e "\e[92m ${{ steps.docker_build.outputs.digest }} \e[0m"
