@@ -45,7 +45,7 @@ jobs:
           push: true
           tags: ${{ secrets.B2P_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
           ssh: |
-            secrets.SSH_PRIVATE_KEY
+            default=${{ env.SSH_AUTH_SOCK }}
           secrets: |
             GIT_AUTH_TOKEN=${{ secrets.B2P_GIT_TOKEN }}
 
@@ -63,7 +63,7 @@ jobs:
           push: true
           tags: ${{ secrets.B2P_ACR_REGISTRY }}/b2p/approvalui:${{ github.ref_name }}
           ssh: |
-            secrets.SSH_PRIVATE_KEY
+            default=${{ env.SSH_AUTH_SOCK }}
           secrets: |
             GIT_AUTH_TOKEN=${{ secrets.B2P_GIT_TOKEN }}
 
