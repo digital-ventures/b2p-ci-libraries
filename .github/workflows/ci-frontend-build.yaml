@@ -51,6 +51,9 @@ jobs:
         if: "!contains(github.ref_name, 'SONAR')"
         uses: docker/build-push-action@v3
         id: docker_build
+        env:
+          DOCKER_BUILDKIT: 1
+          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
         with:
           context: .
           file: Dockerfile
