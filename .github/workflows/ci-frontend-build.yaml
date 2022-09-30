@@ -16,15 +16,11 @@ jobs:
           # submodules: 'true'   #set-safe-directory option of checkout didn't work
 
       - name: SetupSSH
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: true
         uses: webfactory/ssh-agent@v0.1.1
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
-      - name: SetupSSHAgent
-        run: |
-          ssh-agent -a ${SSH_AUTH_SOCK} > /dev/null
-        env:
-          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
 
       - name: Dump GitHub context
         env:
