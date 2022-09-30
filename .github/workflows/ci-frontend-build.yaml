@@ -11,7 +11,7 @@ jobs:
 
       - uses: actions/checkout@v3
         with: 
-          ssh-key: "${{ secrets.SSH_PRIVATE_KEY }}"
+          ssh-key: "${{ secrets.B2P_SSH_PRIVATE_KEY }}"
           ssh-strict: 'StrictHostKeyChecking=no'
           # submodules: 'true'   #set-safe-directory option of checkout didn't work
 
@@ -20,6 +20,7 @@ jobs:
           mkdir -p ~/.ssh
           ssh-keyscan github.com >> ~/.ssh/known_hosts
           ssh-agent -a ${SSH_AUTH_SOCK} > /dev/null
+          ssh-add - <<< "${{ secrets.B2P_SSH_PRIVATE_KEY }}"
         env:
           SSH_AUTH_SOCK: /tmp/ssh_agent.sock
 
