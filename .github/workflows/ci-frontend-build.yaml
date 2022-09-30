@@ -63,6 +63,8 @@ jobs:
       - name: Build
         if: "!contains(github.ref_name, 'SONAR')"
         id: docker_build
+        env:
+          DOCKER_BUILDKIT: 1
         run:
           docker build --ssh default -t ${{ secrets.B2P_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }} .
 
