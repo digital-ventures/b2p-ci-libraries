@@ -16,6 +16,11 @@ jobs:
           # submodules: 'true'   #set-safe-directory option of checkout didn't work
 
       - name: SetupSSH
+        uses: webfactory/ssh-agent@v0.1.1
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: SetupSSHAgent
         run: |
           ssh-agent -a ${SSH_AUTH_SOCK} > /dev/null
         env:
