@@ -6,8 +6,8 @@ jobs:
     runs-on: [self-hosted, b2p]
     container: node:16.13.0-alpine
     steps:
-      # - name: AddAPK
-      #   run: apk --no-cache add git jq tar openssh
+      - name: AddAPK
+        run: apk --no-cache add git jq tar openssh
 
       - uses: actions/checkout@v3
         with: 
