@@ -44,6 +44,8 @@ jobs:
           file: Dockerfile
           push: true
           tags: ${{ secrets.B2P_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
+          ssh: |
+            secrets.SSH_PRIVATE_KEY
           secrets: |
             GIT_AUTH_TOKEN=${{ secrets.B2P_GIT_TOKEN }}
 
@@ -60,6 +62,8 @@ jobs:
           file: Dockerfile
           push: true
           tags: ${{ secrets.B2P_ACR_REGISTRY }}/b2p/approvalui:${{ github.ref_name }}
+          ssh: |
+            secrets.SSH_PRIVATE_KEY
           secrets: |
             GIT_AUTH_TOKEN=${{ secrets.B2P_GIT_TOKEN }}
 
