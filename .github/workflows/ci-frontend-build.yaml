@@ -11,7 +11,7 @@ jobs:
 
       - uses: actions/checkout@v3
         with: 
-          ssh-key: "${{ secrets.B2P_SSH_PRIVATE_KEY }}"
+          ssh-key: "${{ secrets.SSH_PRIVATE_KEY }}"
           ssh-strict: 'StrictHostKeyChecking=no'
           # submodules: 'true'   #set-safe-directory option of checkout didn't work
 
