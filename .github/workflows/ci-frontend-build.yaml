@@ -15,6 +15,15 @@ jobs:
           ssh-strict: 'StrictHostKeyChecking=no'
           # submodules: 'true'   #set-safe-directory option of checkout didn't work
 
+      - name: SetupSSH
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+          ssh-agent -a ${SSH_AUTH_SOCK} > /dev/null
+          ssh-add - <<< "${{ secrets.SSH_PRIVATE_KEY }}"
+        env:
+          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+
       - name: Dump GitHub context
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
@@ -39,15 +48,19 @@ jobs:
       - name: BuildAndPush
         if: "!contains(github.ref_name, 'SONAR')"
         uses: docker/build-push-action@v3
+        env:
+          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+        id: docker_build
         with:
           context: .
           file: Dockerfile
           push: true
           tags: ${{ secrets.B2P_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
-          # ssh: |
-          #   default=${{ secrets.SSH_PRIVATE_KEY }}
-          secrets: |
-            GIT_AUTH_TOKEN=${{ secrets.B2P_GIT_TOKEN }}
+          ssh: |
+            github=${{ env.SSH_AUTH_SOCK }}
+
+      - name: ImageDigest
+        run: echo -e "\e[92m ${{ steps.docker_build.outputs.digest }} \e[0m"
 
       - name: PrepareSteps (approvalui)
         if: "!contains(github.ref_name, 'SONAR') && contains(github.repository, 'admin-portal-ui')"
@@ -57,22 +70,32 @@ jobs:
       - name: BuildAndPush (approvalui)
         if: "!contains(github.ref_name, 'SONAR') && contains(github.repository, 'admin-portal-ui')"
         uses: docker/build-push-action@v3
+        id: docker_build_approvalui
         with:
           context: .
           file: Dockerfile
           push: true
           tags: ${{ secrets.B2P_ACR_REGISTRY }}/b2p/approvalui:${{ github.ref_name }}
-          # ssh: |
-          #   default=${{ env.SSH_AUTH_SOCK }}
-          secrets: |
-            GIT_AUTH_TOKEN=${{ secrets.B2P_GIT_TOKEN }}
+
+      - name: ImageDigest (approvalui)
+        if: "!contains(github.ref_name, 'SONAR') && contains(github.repository, 'admin-portal-ui')"
+        run: echo -e "\e[92m ${{ steps.docker_build_approvalui.outputs.digest }} \e[0m"
 
       - name: BuildAndPushWithCodeScan
         if: "contains(github.ref_name, 'SONAR')"
         uses: docker/build-push-action@v3
+        env:
+          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+        id: docker_build_sonar
         with:
           context: .
           file: DockerfileSonarqube
           build-args: SONARQUBE_TOKEN=${{ secrets.B2P_SONARQUBE_TOKEN }}, CI_COMMIT_TAG=${{ github.ref_name }}
           push: true
           tags: ${{ secrets.B2P_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
+          ssh: |
+            github=${{ env.SSH_AUTH_SOCK }}
+
+      - name: ImageDigest (approvalui)
+        if: "contains(github.ref_name, 'SONAR')"
+        run: echo -e "\e[92m ${{ steps.docker_build_sonar.outputs.digest }} \e[0m"
