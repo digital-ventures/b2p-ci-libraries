@@ -3,7 +3,7 @@ on:
 jobs:
   BuildAndRelease:
     # runs-on: ubuntu-latest
-    runs-on: [self-hosted, crc]
+    runs-on: [self-hosted, b2p]
     # container: node:16.13.0-alpine
     steps:
       # - name: AddAPK
