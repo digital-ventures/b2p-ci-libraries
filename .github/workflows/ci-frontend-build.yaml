@@ -41,11 +41,10 @@ jobs:
           DOCKER_BUILDKIT: 1
           SSH_AUTH_SOCK: /tmp/ssh_agent.sock
         run: |
-          eval $(ssh-agent -s)
+          ssh-agent -a ${SSH_AUTH_SOCK} > /dev/null
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-agent -a ${SSH_AUTH_SOCK} > /dev/null
           ssh-add ~/.ssh/id_rsa
 
       - name: BuildAndPush
