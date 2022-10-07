@@ -73,6 +73,11 @@ jobs:
           username: ${{ secrets.B2P_ACR_USER }}
           password: ${{ secrets.B2P_ACR_TOKEN }}
           
+      - name: RemoveFilesBeforeBuild
+        run:
+          rm -rf ./src/main/resources/application.yml
+          rm -rf ./src/main/resources/application.properties
+
       - name: BuildImage
         uses: gradle/gradle-build-action@v2
         with:
