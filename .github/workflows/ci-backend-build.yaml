@@ -163,7 +163,15 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-southeast-3
 
-      - name: DockerLogin
+      - name: DockerLoginAzure
+        uses: azure/docker-login@v1
+        if: "!contains(github.ref_name, '-AWS')"
+        with:
+          login-server: ${{ secrets.B2P_ACR_REGISTRY }}
+          username: ${{ secrets.B2P_ACR_USER }}
+          password: ${{ secrets.B2P_ACR_TOKEN }}
+
+      - name: DockerLoginAWS
         uses: aws-actions/amazon-ecr-login@v1
 
       - name: RemoveFilesBeforeBuild
