@@ -70,7 +70,6 @@ jobs:
 
       - name: DockerLogin
         uses: azure/docker-login@v1
-        if: "!contains(github.ref_name, '-AWS')"
         with:
           login-server: ${{ secrets.B2P_ACR_REGISTRY }}
           username: ${{ secrets.B2P_ACR_USER }}
@@ -165,7 +164,6 @@ jobs:
 
       - name: DockerLoginAzure
         uses: azure/docker-login@v1
-        if: "!contains(github.ref_name, '-AWS')"
         with:
           login-server: ${{ secrets.B2P_ACR_REGISTRY }}
           username: ${{ secrets.B2P_ACR_USER }}
