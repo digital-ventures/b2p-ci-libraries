@@ -97,6 +97,10 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-southeast-3
 
+      - name: Login to Amazon ECR
+        if: contains(github.ref_name, '-AWS')
+        uses: aws-actions/amazon-ecr-login@v1
+
       - name: BuildImageToAWS
         uses: gradle/gradle-build-action@v2
         if: contains(github.ref_name, '-AWS')
