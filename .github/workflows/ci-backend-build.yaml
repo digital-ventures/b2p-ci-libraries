@@ -177,10 +177,20 @@ jobs:
           rm -rf ./src/main/resources/application.yml
           rm -rf ./src/main/resources/application.properties
 
-      - name: BuildImage
+      - name: BuildImage (non-customBuyer)
         uses: gradle/gradle-build-action@v2
+        if: "!contains(${{ secrets.B2P_SERVICENAME }}, 'custom_buyer')"
         with:
           gradle-version: 7.2
           arguments: |
               jib
               --image=${{ secrets.B2P_AWS_REGISTRY }}/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
+
+      - name: BuildImage (customBuyer)
+        uses: gradle/gradle-build-action@v2
+        if: contains(${{ secrets.B2P_SERVICENAME }}, 'custom_buyer')
+        with:
+          gradle-version: 7.2
+          arguments: |
+              jib
+              --image=${{ secrets.B2P_AWS_REGISTRY }}/custom_buyer:${{ github.ref_name }}
