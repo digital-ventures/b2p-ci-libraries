@@ -2,7 +2,8 @@ name: Frontend Build
 on:
   workflow_call:
 jobs:
-  BuildAndRelease:
+  BuildAndReleaseAzure:
+    if: "!contains(github.ref_name, '-AWS')"
     # runs-on: ubuntu-latest
     runs-on: [self-hosted, b2p]
     # container: node:16.13.0-alpine
@@ -31,7 +32,7 @@ jobs:
       - name: SetupDockerBuildx
         uses: docker/setup-buildx-action@v2
 
-      - name: DockerLogin
+      - name: DockerLoginAzure
         uses: azure/docker-login@v1
         with:
           login-server: ${{ secrets.B2P_ACR_REGISTRY }}
@@ -99,6 +100,119 @@ jobs:
           build-args: SONARQUBE_TOKEN=${{ secrets.B2P_SONARQUBE_TOKEN }}, CI_COMMIT_TAG=${{ github.ref_name }}
           push: true
           tags: ${{ secrets.B2P_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
+
+      - name: ImageDigest (approvalui)
+        if: "contains(github.ref_name, 'SONAR')"
+        run: echo -e "\e[92m ${{ steps.docker_build_sonar.outputs.digest }} \e[0m"
+
+  BuildAndReleaseAWS:
+    # runs-on: ubuntu-latest
+    if: contains(github.ref_name, '-AWS')
+    runs-on: [self-hosted, b2p]
+    # container: node:16.13.0-alpine
+    container: docker
+    steps:
+      - name: AddAPK
+        run: apk --no-cache add git jq tar openssh docker
+
+      - uses: actions/checkout@v3
+        with: 
+          ssh-key: "${{ secrets.SSH_PRIVATE_KEY }}"
+          ssh-strict: 'StrictHostKeyChecking=no'
+          # submodules: 'true'   #set-safe-directory option of checkout didn't work
+
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+
+      - name: GitConfig
+        run: |
+          git config --global user.name ${{ secrets.B2P_GIT_USER }}
+          git config --global user.email ${{ secrets.B2P_GIT_USER }}@dv.co.th
+          git config --global --add safe.directory ${GITHUB_WORKSPACE}
+
+      - name: SetupDockerBuildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-southeast-3
+
+      - name: DockerLoginAzure
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ secrets.B2P_ACR_REGISTRY }}
+          username: ${{ secrets.B2P_ACR_USER }}
+          password: ${{ secrets.B2P_ACR_TOKEN }}
+
+      - name: DockerLoginAWS
+        uses: aws-actions/amazon-ecr-login@v1
+
+      # - name: BuildAndPush
+      #   if: "!contains(github.ref_name, 'SONAR')"
+      #   uses: docker/build-push-action@v3
+      #   id: docker_build
+      #   env:
+      #     DOCKER_BUILDKIT: 1
+      #     SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+      #   with:
+      #     context: .
+      #     file: Dockerfile
+      #     push: true
+      #     tags: ${{ secrets.B2P_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
+
+      - name: BuildAndPush
+        if: "!contains(github.ref_name, 'SONAR')"
+        id: docker_build
+        env:
+          DOCKER_BUILDKIT: 1
+        run: |
+          eval $(ssh-agent -s)
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-add ~/.ssh/id_rsa
+          mkdir -p ./src
+          echo ${{ github.ref_name }} > ./src/version.txt  #add content in /version page
+          docker build --ssh default -t ${{ secrets.B2P_AWS_REGISTRY }}/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }} .
+          docker push ${{ secrets.B2P_AWS_REGISTRY }}/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
+
+      - name: ImageDigest
+        run: echo -e "\e[92m ${{ steps.docker_build.outputs.digest }} \e[0m"
+
+      - name: PrepareSteps (approvalui)
+        if: "!contains(github.ref_name, 'SONAR') && contains(github.repository, 'admin-portal-ui')"
+        run: |
+          ./prepare-approval-files.sh
+
+      - name: BuildAndPush (approvalui)
+        if: "!contains(github.ref_name, 'SONAR') && contains(github.repository, 'admin-portal-ui')"
+        uses: docker/build-push-action@v3
+        id: docker_build_approvalui
+        with:
+          context: .
+          file: Dockerfile
+          push: true
+          tags: ${{ secrets.B2P_AWS_REGISTRY }}/approvalui:${{ github.ref_name }}
+
+      - name: ImageDigest (approvalui)
+        if: "!contains(github.ref_name, 'SONAR') && contains(github.repository, 'admin-portal-ui')"
+        run: echo -e "\e[92m ${{ steps.docker_build_approvalui.outputs.digest }} \e[0m"
+
+      - name: BuildAndPushWithCodeScan
+        if: "contains(github.ref_name, 'SONAR')"
+        uses: docker/build-push-action@v3
+        id: docker_build_sonar
+        with:
+          context: .
+          file: DockerfileSonarqube
+          build-args: SONARQUBE_TOKEN=${{ secrets.B2P_SONARQUBE_TOKEN }}, CI_COMMIT_TAG=${{ github.ref_name }}
+          push: true
+          tags: ${{ secrets.B2P_AWS_REGISTRY }}/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
 
       - name: ImageDigest (approvalui)
         if: "contains(github.ref_name, 'SONAR')"
