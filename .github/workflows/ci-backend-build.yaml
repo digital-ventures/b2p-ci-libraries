@@ -4,8 +4,8 @@ on:
 jobs:
   BuildAndReleaseAzure:
     if: "!contains(github.ref_name, '-AWS')"
-    # runs-on: ubuntu-latest
-    runs-on: [self-hosted, b2p]
+    runs-on: ubuntu-latest
+    # runs-on: [self-hosted, b2p]
     container: openjdk:17-jdk-alpine3.14
     steps:
       - name: AddAPK
@@ -91,8 +91,8 @@ jobs:
 
   BuildAndReleaseAWS:
     if: contains(github.ref_name, '-AWS')
-    # runs-on: ubuntu-latest
-    runs-on: [self-hosted, b2p]
+    runs-on: ubuntu-latest
+    # runs-on: [self-hosted, b2p]
     container: openjdk:17-jdk-alpine3.14
     steps:
       - name: AddAPK
