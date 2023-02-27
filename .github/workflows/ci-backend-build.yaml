@@ -96,7 +96,7 @@ jobs:
         with:
           projectBaseDir: src
           args: >
-            -Dsonar.projectName=B2P-${{ secrets.B2P_SERVICENAME }}
+            -Dsonar.projectName=B2P-${{ secrets.B2P_SERVICENAME }}-${{ github.ref_name }}
             -Dsonar.projectKey=B2P-${{ secrets.B2P_SERVICENAME }}
 
       - name: BuildImage
