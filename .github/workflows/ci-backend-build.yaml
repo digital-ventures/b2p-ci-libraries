@@ -84,9 +84,24 @@ jobs:
           rm -rf ./src/main/resources/application.yml
           rm -rf ./src/main/resources/application.properties
 
+##### CodeScan
+      - name: SonarQubeScan
+        # if: contains(github.ref_name, 'SONAR')
+        if: github.ref_type == 'tag' && contains(github.ref_name, 'SONAR')
+        uses: sonarsource/sonarqube-scan-action@master
+        env:
+          SONAR_TOKEN: ${{ secrets.B2P_SONARQUBE_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.B2P_SONARQUBE_TOKEN }}
+          LC_ALL: "en_US.UTF-8"
+        with:
+          projectBaseDir: src
+          args: >
+            -Dsonar.projectName=B2P-${{ secrets.B2P_SERVICENAME }}-${{ github.ref_name }}
+            -Dsonar.projectKey=B2P-${{ secrets.B2P_SERVICENAME }}-${{ github.ref_name }}
+
       - name: BuildImage
         uses: gradle/gradle-build-action@v2
-        if: "!contains(github.ref_name, '-AWS')"
+        if: "!contains(github.ref_name, 'SONAR')"
         with:
           gradle-version: 7.2
           arguments: |
