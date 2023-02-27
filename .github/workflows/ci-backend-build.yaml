@@ -91,13 +91,13 @@ jobs:
         uses: sonarsource/sonarqube-scan-action@master
         env:
           SONAR_TOKEN: ${{ secrets.B2P_SONARQUBE_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.B2P_SONARQUBE_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.B2P_SONARQUBE_HOST_URL }}
           LC_ALL: "en_US.UTF-8"
         with:
           projectBaseDir: src
           args: >
-            -Dsonar.projectName=B2P-${{ secrets.B2P_SERVICENAME }}-${{ github.ref_name }}
-            -Dsonar.projectKey=B2P-${{ secrets.B2P_SERVICENAME }}-${{ github.ref_name }}
+            -Dsonar.projectName=B2P-${{ secrets.B2P_SERVICENAME }}
+            -Dsonar.projectKey=B2P-${{ secrets.B2P_SERVICENAME }}
 
       - name: BuildImage
         uses: gradle/gradle-build-action@v2
