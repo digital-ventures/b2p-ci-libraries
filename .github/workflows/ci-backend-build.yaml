@@ -104,7 +104,7 @@ jobs:
         # if: contains(github.ref_name, 'SONAR')
         if: github.ref_type == 'tag' && contains(github.ref_name, 'SONAR')
         run:
-          ./gradlew sonar -Dsonar.login=${{ secrets.B2P_SONARQUBE_TOKEN }} -Dsonar.projectName=B2P-${{ secrets.B2P_SERVICENAME }} -Dsonar.projectKey=B2P-${{ secrets.B2P_SERVICENAME }} -Dsonar.projectVersion=${{ github.ref_name }} -Dsonar.host.url=https://sonarqube.b2p.services
+          ./gradlew sonar -Dsonar.login=${{ secrets.B2P_SONARQUBE_TOKEN }} -Dsonar.projectName=B2P-${{ secrets.B2P_SERVICENAME }} -Dsonar.projectKey=B2P-${{ secrets.B2P_SERVICENAME }} -Dsonar.projectVersion=${{ github.ref_name }} -Dsonar.host.url=${{ secrets.B2P_SONARQUBE_HOST_URL }}
 
       - name: BuildImage
         uses: gradle/gradle-build-action@v2
