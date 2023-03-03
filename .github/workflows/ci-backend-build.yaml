@@ -8,9 +8,9 @@ jobs:
     runs-on: [self-hosted, b2p]
     container: openjdk:17-jdk-alpine3.14
     steps:
-      - name: Add hosts to /etc/hosts
-        run: |
-            echo "52.211.28.190 software.r3.com" | tee -a /etc/hosts
+      # - name: Add hosts to /etc/hosts
+      #   run: |
+      #       echo "52.211.28.190 software.r3.com" | tee -a /etc/hosts
 
       - name: AddAPK
         run: apk --no-cache add git jq tar openssh
@@ -121,9 +121,9 @@ jobs:
     runs-on: [self-hosted, b2p]
     container: openjdk:17-jdk-alpine3.14
     steps:
-      - name: Add hosts to /etc/hosts
-        run: |
-            echo "52.211.28.190 software.r3.com" | tee -a /etc/hosts
+      # - name: Add hosts to /etc/hosts
+      #   run: |
+      #       echo "52.211.28.190 software.r3.com" | tee -a /etc/hosts
 
       - name: AddAPK
         run: apk --no-cache add git jq tar openssh docker
