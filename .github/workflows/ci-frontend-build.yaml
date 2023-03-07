@@ -101,7 +101,7 @@ jobs:
         with:
           context: .
           file: DockerfileSonarqube
-          build-args: SONARQUBE_TOKEN=${{ secrets.B2P_SONARQUBE_TOKEN }}, CI_COMMIT_TAG=${{ github.ref_name }}
+          build-args: SONARQUBE_TOKEN=${{ secrets.B2P_SONARQUBE_TOKEN }}, B2P_SERVICENAME=${{ secrets.B2P_SERVICENAME }}, B2P_SONARQUBE_HOST_URL=${{ secrets.B2P_SONARQUBE_HOST_URL }}, CI_COMMIT_TAG=${{ github.ref_name }}
           push: true
           tags: ${{ secrets.B2P_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
 
