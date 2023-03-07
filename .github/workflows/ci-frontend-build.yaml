@@ -9,10 +9,6 @@ jobs:
     # container: node:16.13.0-alpine
     container: docker:20.10.21-alpine3.16
     steps:
-      - name: Add hosts to /etc/hosts
-        run: |
-            echo "52.211.28.190 software.r3.com" | tee -a /etc/hosts
-
       - name: AddAPK
         run: apk --no-cache add git jq tar openssh
 
@@ -94,17 +90,22 @@ jobs:
         if: "!contains(github.ref_name, 'SONAR') && contains(github.repository, 'admin-portal-ui')"
         run: echo -e "\e[92m ${{ steps.docker_build_approvalui.outputs.digest }} \e[0m"
 
+      # - name: BuildAndPushWithCodeScan
+      #   if: "contains(github.ref_name, 'SONAR')"
+      #   uses: docker/build-push-action@v3
+      #   id: docker_build_sonar
+      #   with:
+      #     context: .
+      #     file: DockerfileSonarqube
+      #     build-args: SONARQUBE_TOKEN=${{ secrets.B2P_SONARQUBE_TOKEN }}, B2P_SERVICENAME=${{ secrets.B2P_SERVICENAME }}, B2P_SONARQUBE_HOST_URL=${{ secrets.B2P_SONARQUBE_HOST_URL }}, CI_COMMIT_TAG=${{ github.ref_name }}
+      #     push: true
+      #     tags: ${{ secrets.B2P_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
+
       - name: BuildAndPushWithCodeScan
         if: "contains(github.ref_name, 'SONAR')"
-        uses: docker/build-push-action@v3
-        id: docker_build_sonar
-        with:
-          context: .
-          file: DockerfileSonarqube
-          build-args: SONARQUBE_TOKEN=${{ secrets.B2P_SONARQUBE_TOKEN }}, CI_COMMIT_TAG=${{ github.ref_name }}
-          push: true
-          tags: ${{ secrets.B2P_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
-
+        run: |
+          docker build -f DockerfileSonarqube . --build-arg SONARQUBE_HOST_URL=${{ secrets.B2P_SONARQUBE_HOST_URL }} --build-arg SONARQUBE_TOKEN=${{ secrets.B2P_SONARQUBE_TOKEN }} --build-arg CI_COMMIT_TAG=${{ github.ref_name }} --build-arg SERVICENAME=${{ secrets.B2P_SERVICENAME }}
+          
       - name: ImageDigest (approvalui)
         if: "contains(github.ref_name, 'SONAR')"
         run: echo -e "\e[92m ${{ steps.docker_build_sonar.outputs.digest }} \e[0m"
@@ -116,10 +117,6 @@ jobs:
     # container: node:16.13.0-alpine
     container: docker
     steps:
-      - name: Add hosts to /etc/hosts
-        run: |
-            echo "52.211.28.190 software.r3.com" | tee -a /etc/hosts
-
       - name: AddAPK
         run: apk --no-cache add git jq tar openssh docker
 
