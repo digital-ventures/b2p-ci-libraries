@@ -12,7 +12,7 @@ jobs:
         run: apk --no-cache add git jq tar
       
       - name: AddAPK openssh
-        run: apk update && apk --no-cache add openssh@8.6_p1-r3
+        run: apk --no-cache add openssh=8.6_p1-r3
 
       - name: CheckOut
         uses: actions/checkout@v3
@@ -117,7 +117,7 @@ jobs:
         run: apk --no-cache add git jq tar docker
 
       - name: AddAPK openssh
-        run: apk update && apk --no-cache add openssh@8.6_p1-r3
+        run: apk --no-cache add openssh=8.6_p1-r3
 
       - name: CheckOut
         uses: actions/checkout@v3
