@@ -13,7 +13,7 @@ jobs:
         run: apk --no-cache add git jq tar
 
       - name: AddAPK openssh
-        run: apk --no-cache --repository=http://dl-cdn.alpinelinux.org/alpine/v3.17/main add openssh=9.1_p1-r3
+        run: apk --repository=http://dl-cdn.alpinelinux.org/alpine/v3.17/main add openssh=9.1_p1-r3
 
       - uses: actions/checkout@v3
         with: 
