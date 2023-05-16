@@ -19,6 +19,7 @@ jobs:
 
       - name: Install Openssh
         run: apk add openssh-client-common-9.0_p1-r3.apk openssh-client-default-9.0_p1-r3.apk openssh-9.0_p1-r3.apk
+      
       - uses: actions/checkout@v3
         with: 
           ssh-key: "${{ secrets.SSH_PRIVATE_KEY }}"
