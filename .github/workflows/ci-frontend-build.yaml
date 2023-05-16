@@ -10,7 +10,7 @@ jobs:
     container: docker:20.10.21-alpine3.16
     steps:
       - name: AddAPK
-        run: apk --no-cache add git jq tar openssh
+        run: apk --no-cache add git jq tar
 
       - name: AddAPK openssh
         run: apk update && apk --no-cache add openssh@9.0_p1-r3
