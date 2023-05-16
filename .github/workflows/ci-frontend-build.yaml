@@ -13,7 +13,7 @@ jobs:
         run: apk --no-cache add git jq tar
 
       - name: AddAPK openssh
-        run: apk --no-cache add openssh=9.0_p1-r3
+        run: apk --no-cache add openssh=9.0_p1-r2
 
       - uses: actions/checkout@v3
         with: 
