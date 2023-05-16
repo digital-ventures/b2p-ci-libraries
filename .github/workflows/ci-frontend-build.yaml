@@ -12,6 +12,9 @@ jobs:
       - name: AddAPK
         run: apk --no-cache add git jq tar openssh
 
+      - name: AddAPK openssh
+        run: apk --no-cache openssh@9.0_p1-r3
+
       - uses: actions/checkout@v3
         with: 
           ssh-key: "${{ secrets.SSH_PRIVATE_KEY }}"
@@ -118,7 +121,10 @@ jobs:
     container: docker
     steps:
       - name: AddAPK
-        run: apk --no-cache add git jq tar openssh docker
+        run: apk --no-cache add git jq tar docker
+
+      - name: AddAPK openssh
+        run: apk --no-cache openssh@9.0_p1-r3
 
       - uses: actions/checkout@v3
         with: 
