@@ -68,8 +68,8 @@ jobs:
           ssh-add ~/.ssh/id_rsa
           mkdir -p ./src
           echo ${{ github.ref_name }} > ./src/version.txt  #add content in /version page
-          docker build --ssh default -t ${{ secrets.B2P_AWS_REGISTRY }}/${{ secrets.B2P_SERVICENAME }}:${{ github.head_ref }} .
-          docker push ${{ secrets.B2P_AWS_REGISTRY }}/${{ secrets.B2P_SERVICENAME }}:${{ github.head_ref }}
+          docker build --ssh default -t ${{ secrets.B2P_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.head_ref }} .
+          docker push ${{ secrets.B2P_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.head_ref }}
 
       - name: ImageDigest
         run: echo -e "\e[92m ${{ steps.docker_build.outputs.digest }} \e[0m"
