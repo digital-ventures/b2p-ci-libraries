@@ -176,9 +176,6 @@ jobs:
       #     push: true
       #     tags: ${{ secrets.B2P_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
 
-      - name: Get Branch
-        run: echo "BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
-
       - name: BuildAndPush
         if: "!contains(github.ref_name, 'SONAR')"
         id: docker_build
