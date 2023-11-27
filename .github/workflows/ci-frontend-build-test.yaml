@@ -54,9 +54,6 @@ jobs:
       #     file: Dockerfile
       #     push: true
       #     tags: ${{ secrets.B2P_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
-
-      - name: Get Branch
-        run: echo "BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
         
       - name: BuildAndPush
         if: "!contains(github.ref_name, 'SONAR')"
@@ -71,8 +68,8 @@ jobs:
           ssh-add ~/.ssh/id_rsa
           mkdir -p ./src
           echo ${{ github.ref_name }} > ./src/version.txt  #add content in /version page
-          docker build --ssh default --build-arg="BRANCH=${{ env.BRANCH }}" -t ${{ secrets.B2P_AWS_REGISTRY }}/${{ secrets.B2P_SERVICENAME }}:${{ env.BRANCH }} .
-          docker push ${{ secrets.B2P_AWS_REGISTRY }}/${{ secrets.B2P_SERVICENAME }}:${{ env.BRANCH }}
+          docker build --ssh default -t ${{ secrets.B2P_AWS_REGISTRY }}/${{ secrets.B2P_SERVICENAME }}:${{ github.head_ref }} .
+          docker push ${{ secrets.B2P_AWS_REGISTRY }}/${{ secrets.B2P_SERVICENAME }}:${{ github.head_ref }}
 
       - name: ImageDigest
         run: echo -e "\e[92m ${{ steps.docker_build.outputs.digest }} \e[0m"
@@ -195,8 +192,8 @@ jobs:
           ssh-add ~/.ssh/id_rsa
           mkdir -p ./src
           echo ${{ github.ref_name }} > ./src/version.txt  #add content in /version page
-          docker build --ssh default --build-arg="BRANCH=${{ env.BRANCH }}" -t ${{ secrets.B2P_AWS_REGISTRY }}/${{ secrets.B2P_SERVICENAME }}:${{ env.BRANCH }} .
-          docker push ${{ secrets.B2P_AWS_REGISTRY }}/${{ secrets.B2P_SERVICENAME }}:${{ env.BRANCH }}
+          docker build --ssh default -t ${{ secrets.B2P_AWS_REGISTRY }}/${{ secrets.B2P_SERVICENAME }}:${{ github.head_ref }} .
+          docker push ${{ secrets.B2P_AWS_REGISTRY }}/${{ secrets.B2P_SERVICENAME }}:${{ github.head_ref }}
 
       - name: ImageDigest
         run: echo -e "\e[92m ${{ steps.docker_build.outputs.digest }} \e[0m"
