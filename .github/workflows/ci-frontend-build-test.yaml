@@ -42,15 +42,6 @@ jobs:
           username: ${{ secrets.B2P_ACR_USER }}
           password: ${{ secrets.B2P_ACR_TOKEN }}
 
-      - name: BuildTools
-        uses: yokawasa/action-setup-kube-tools@v0.9.2
-        with:
-          kustomize: '5.0.0'
-          skaffold: '2.1.0'
-          helm: '3.11.1'
-          kubectl: '1.24.10'
-          yq: '4.30.7'
-
       # - name: BuildAndPush
       #   if: "!contains(github.ref_name, 'SONAR')"
       #   uses: docker/build-push-action@v3
@@ -63,15 +54,12 @@ jobs:
       #     file: Dockerfile
       #     push: true
       #     tags: ${{ secrets.B2P_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
-      - name: Extract Git Tag
-        run: echo "GIT_TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
 
       - name: BuildAndPush
         if: "!contains(github.ref_name, 'SONAR')"
         id: docker_build
         env:
           DOCKER_BUILDKIT: 1
-          IMAGE_TAG: ${{ env.GIT_TAG }}
         run: |
           eval $(ssh-agent -s)
           mkdir -p ~/.ssh
@@ -80,8 +68,8 @@ jobs:
           ssh-add ~/.ssh/id_rsa
           mkdir -p ./src
           echo ${{ github.ref_name }} > ./src/version.txt  #add content in /version page
-          docker build --ssh default -t ${{ secrets.B2P_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:$IMAGE_TAG .
-          docker push ${{ secrets.B2P_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:$IMAGE_TAG
+          docker build --ssh default -t ${{ secrets.B2P_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }} .
+          docker push ${{ secrets.B2P_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
 
       - name: ImageDigest
         run: echo -e "\e[92m ${{ steps.docker_build.outputs.digest }} \e[0m"
@@ -188,6 +176,9 @@ jobs:
       #     push: true
       #     tags: ${{ secrets.B2P_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
 
+      - name: What
+        run: echo "BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
+
       - name: BuildAndPush
         if: "!contains(github.ref_name, 'SONAR')"
         id: docker_build
@@ -201,8 +192,8 @@ jobs:
           ssh-add ~/.ssh/id_rsa
           mkdir -p ./src
           echo ${{ github.ref_name }} > ./src/version.txt  #add content in /version page
-          docker build --ssh default -t ${{ secrets.B2P_AWS_REGISTRY }}/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }} .
-          docker push ${{ secrets.B2P_AWS_REGISTRY }}/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
+          docker build --ssh default --build-arg="BRANCH=${{ env.BRANCH }}" -t ${{ secrets.B2P_AWS_REGISTRY }}/${{ secrets.B2P_SERVICENAME }}:${{ env.BRANCH }} .
+          docker push ${{ secrets.B2P_AWS_REGISTRY }}/${{ secrets.B2P_SERVICENAME }}:${{ env.BRANCH }}
 
       - name: ImageDigest
         run: echo -e "\e[92m ${{ steps.docker_build.outputs.digest }} \e[0m"
