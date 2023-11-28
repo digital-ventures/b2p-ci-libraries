@@ -87,7 +87,7 @@ jobs:
           context: .
           file: Dockerfile
           push: true
-          tags: ${{ secrets.B2P_ACR_REGISTRY }}/b2p/approvalui:${{ github.ref_name }}
+          tags: ${{ secrets.B2P_ACR_REGISTRY }}/b2p/approvalui:${{ github.head_ref }}
 
       - name: ImageDigest (approvalui)
         if: "!contains(github.ref_name, 'SONAR') && contains(github.repository, 'admin-portal-ui')"
@@ -208,7 +208,7 @@ jobs:
           context: .
           file: Dockerfile
           push: true
-          tags: ${{ secrets.B2P_AWS_REGISTRY }}/approvalui:${{ github.ref_name }}
+          tags: ${{ secrets.B2P_AWS_REGISTRY }}/approvalui:${{ github.head_ref }}
 
       - name: ImageDigest (approvalui)
         if: "!contains(github.ref_name, 'SONAR') && contains(github.repository, 'admin-portal-ui')"
@@ -223,7 +223,7 @@ jobs:
           file: DockerfileSonarqube
           build-args: SONARQUBE_TOKEN=${{ secrets.B2P_SONARQUBE_TOKEN }}, CI_COMMIT_TAG=${{ github.ref_name }}
           push: true
-          tags: ${{ secrets.B2P_AWS_REGISTRY }}/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
+          tags: ${{ secrets.B2P_AWS_REGISTRY }}/${{ secrets.B2P_SERVICENAME }}:${{ github.head_ref }}
 
       - name: ImageDigest (approvalui)
         if: "contains(github.ref_name, 'SONAR')"
