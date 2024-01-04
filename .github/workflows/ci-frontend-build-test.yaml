@@ -72,7 +72,7 @@ jobs:
       #     docker push ${{ secrets.B2P_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.head_ref }}
 
       - name: BuildAndPush (Manual Release)
-        if: "github.ref_name == 'develop' || github.ref_name == 'release' || github.ref_name == 'master'"
+        if: "github.ref == 'develop' || github.ref == 'release' || github.ref == 'master'"
         id: docker_build
         env:
           DOCKER_BUILDKIT: 1
