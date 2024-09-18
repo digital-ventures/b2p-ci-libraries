@@ -209,7 +209,7 @@ jobs:
         uses: gradle/gradle-build-action@v2
         # if: "!contains(${{ secrets.B2P_SERVICENAME }}, 'custom_buyer')"
         with:
-          gradle-version: 7.2
+          gradle-version:8.0
           arguments: |
               jib
               --image=${{ secrets.B2P_AWS_REGISTRY }}/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
