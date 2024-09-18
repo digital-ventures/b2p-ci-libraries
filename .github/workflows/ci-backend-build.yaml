@@ -109,7 +109,7 @@ jobs:
         uses: gradle/gradle-build-action@v2
         if: "!contains(github.ref_name, 'SONAR')"
         with:
-          gradle-version: 7.2
+          gradle-version: 8.0
           arguments: |
               jib
               --image=${{ secrets.B2P_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
