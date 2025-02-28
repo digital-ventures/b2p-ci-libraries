@@ -4,8 +4,8 @@ on:
 jobs:
   BuildAndReleaseAzure:
     if: "!contains(github.ref_name, '-AWS')"
-    # runs-on: ubuntu-latest
-    runs-on: gha-runner-scale-set
+    runs-on: ubuntu-latest
+    # runs-on: gha-runner-scale-set
     # container: node:16.13.0-alpine
     container: docker:20.10.21-alpine3.16
     steps:
@@ -130,9 +130,9 @@ jobs:
         run: echo -e "\e[92m ${{ steps.docker_build_sonar.outputs.digest }} \e[0m"
 
   BuildAndReleaseAWS:
-    # runs-on: ubuntu-latest
+    runs-on: ubuntu-latest
     if: contains(github.ref_name, '-AWS')
-    runs-on: gha-runner-scale-set
+    # runs-on: gha-runner-scale-set
     # container: node:16.13.0-alpine
     container: docker
     steps:
