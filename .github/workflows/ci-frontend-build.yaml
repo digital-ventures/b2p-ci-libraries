@@ -38,9 +38,9 @@ jobs:
       - name: DockerLoginAzure
         uses: azure/docker-login@v1
         with:
-          login-server: ${{ secrets.B2P_ACR_REGISTRY }}
-          username: ${{ secrets.B2P_ACR_USER }}
-          password: ${{ secrets.B2P_ACR_TOKEN }}
+          login-server: ${{ secrets.B2P_DEVOPS_ACR_REGISTRY }}
+          username: ${{ secrets.B2P_DEVOPS_ACR_USER }}
+          password: ${{ secrets.B2P_DEVOPS_ACR_TOKEN }}
 
       # - name: BuildAndPush
       #   if: "!contains(github.ref_name, 'SONAR')"
@@ -53,7 +53,7 @@ jobs:
       #     context: .
       #     file: Dockerfile
       #     push: true
-      #     tags: ${{ secrets.B2P_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
+      #     tags: ${{ secrets.B2P_DEVOPS_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
 
       - name: BuildAndPush
         if: "!contains(github.ref_name, 'SONAR')"
@@ -68,8 +68,8 @@ jobs:
           ssh-add ~/.ssh/id_rsa
           mkdir -p ./src
           echo ${{ github.ref_name }} > ./src/version.txt  #add content in /version page
-          docker build --ssh default -t ${{ secrets.B2P_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }} .
-          docker push ${{ secrets.B2P_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
+          docker build --ssh default -t ${{ secrets.B2P_DEVOPS_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }} .
+          docker push ${{ secrets.B2P_DEVOPS_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
 
       - name: ImageDigest
         run: echo -e "\e[92m ${{ steps.docker_build.outputs.digest }} \e[0m"
@@ -87,7 +87,7 @@ jobs:
           context: .
           file: Dockerfile
           push: true
-          tags: ${{ secrets.B2P_ACR_REGISTRY }}/b2p/approvalui:${{ github.ref_name }}
+          tags: ${{ secrets.B2P_DEVOPS_ACR_REGISTRY }}/b2p/approvalui:${{ github.ref_name }}
 
       - name: ImageDigest (approvalui)
         if: "!contains(github.ref_name, 'SONAR') && contains(github.repository, 'admin-portal-ui')"
@@ -102,7 +102,7 @@ jobs:
       #     file: DockerfileSonarqube
       #     build-args: SONARQUBE_TOKEN=${{ secrets.B2P_SONARQUBE_TOKEN }}, B2P_SERVICENAME=${{ secrets.B2P_SERVICENAME }}, B2P_SONARQUBE_HOST_URL=${{ secrets.B2P_SONARQUBE_HOST_URL }}, CI_COMMIT_TAG=${{ github.ref_name }}
       #     push: true
-      #     tags: ${{ secrets.B2P_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
+      #     tags: ${{ secrets.B2P_DEVOPS_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
 
       - name: BuildAndPushWithCodeScan
         if: "contains(github.ref_name, 'SONAR')"
@@ -156,9 +156,9 @@ jobs:
       - name: DockerLoginAzure
         uses: azure/docker-login@v1
         with:
-          login-server: ${{ secrets.B2P_ACR_REGISTRY }}
-          username: ${{ secrets.B2P_ACR_USER }}
-          password: ${{ secrets.B2P_ACR_TOKEN }}
+          login-server: ${{ secrets.B2P_DEVOPS_ACR_REGISTRY }}
+          username: ${{ secrets.B2P_DEVOPS_ACR_USER }}
+          password: ${{ secrets.B2P_DEVOPS_ACR_TOKEN }}
 
       - name: DockerLoginAWS
         uses: aws-actions/amazon-ecr-login@v1
@@ -174,7 +174,7 @@ jobs:
       #     context: .
       #     file: Dockerfile
       #     push: true
-      #     tags: ${{ secrets.B2P_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
+      #     tags: ${{ secrets.B2P_DEVOPS_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
 
       - name: BuildAndPush
         if: "!contains(github.ref_name, 'SONAR')"
