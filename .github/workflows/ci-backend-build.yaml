@@ -74,9 +74,9 @@ jobs:
       - name: DockerLogin
         uses: azure/docker-login@v1
         with:
-          login-server: ${{ secrets.B2P_ACR_REGISTRY }}
-          username: ${{ secrets.B2P_ACR_USER }}
-          password: ${{ secrets.B2P_ACR_TOKEN }}
+          login-server: ${{ secrets.B2P_DEVOPS_ACR_REGISTRY }}
+          username: ${{ secrets.B2P_DEVOPS_ACR_USER }}
+          password: ${{ secrets.B2P_DEVOPS_ACR_TOKEN }}
           
       - name: RemoveFilesBeforeBuild
         run:
@@ -112,7 +112,7 @@ jobs:
           gradle-version: 7.2
           arguments: |
               jib
-              --image=${{ secrets.B2P_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
+              --image=${{ secrets.B2P_DEVOPS_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
 
   BuildAndReleaseAWS:
     if: contains(github.ref_name, '-AWS')
@@ -193,9 +193,9 @@ jobs:
       - name: DockerLoginAzure
         uses: azure/docker-login@v1
         with:
-          login-server: ${{ secrets.B2P_ACR_REGISTRY }}
-          username: ${{ secrets.B2P_ACR_USER }}
-          password: ${{ secrets.B2P_ACR_TOKEN }}
+          login-server: ${{ secrets.B2P_DEVOPS_ACR_REGISTRY }}
+          username: ${{ secrets.B2P_DEVOPS_ACR_USER }}
+          password: ${{ secrets.B2P_DEVOPS_ACR_TOKEN }}
 
       - name: DockerLoginAWS
         uses: aws-actions/amazon-ecr-login@v1
