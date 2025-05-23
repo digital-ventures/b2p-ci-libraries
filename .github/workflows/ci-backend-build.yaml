@@ -6,11 +6,8 @@ jobs:
     if: "!contains(github.ref_name, '-AWS')"
     #runs-on: ubuntu-latest
     runs-on: gha-runner-scale-set
-    container: openjdk:17-jdk-alpine3.14
-    services:
-      docker:
-        image: docker:dind
-        options: --privileged
+    container:
+      image: docker:20.10.24-dind
     steps:
       - name: Update Repo
         run: apk update && apk upgrade
