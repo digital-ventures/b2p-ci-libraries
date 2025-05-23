@@ -7,7 +7,10 @@ jobs:
     #runs-on: ubuntu-latest
     runs-on: gha-runner-scale-set
     container: openjdk:17-jdk-alpine3.14
-    options: --privileged -v /var/run/docker.sock:/var/run/docker.sock
+    services:
+      docker:
+        image: docker:dind
+        options: --privileged
     steps:
       - name: Update Repo
         run: apk update && apk upgrade
