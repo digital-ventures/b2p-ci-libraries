@@ -4,9 +4,10 @@ on:
 jobs:
   BuildAndReleaseAzure:
     if: "!contains(github.ref_name, '-AWS')"
-    runs-on: ubuntu-latest
-    #runs-on: gha-runner-scale-set
+    #runs-on: ubuntu-latest
+    runs-on: gha-runner-scale-set
     container: openjdk:17-jdk-alpine3.14
+    options: --privileged -v /var/run/docker.sock:/var/run/docker.sock
     steps:
       - name: Update Repo
         run: apk update && apk upgrade
