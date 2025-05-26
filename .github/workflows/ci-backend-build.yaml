@@ -14,9 +14,6 @@ jobs:
     steps:
       - run: echo "🎉 This job uses runner scale set runners!"  
 
-      - name: AddAPK
-        run: apk --no-cache add git jq tar docker
-
       - name: CheckOut
         uses: actions/checkout@v3
         with: 
@@ -80,6 +77,9 @@ jobs:
           login-server: ${{ secrets.B2P_DEVOPS_ACR_REGISTRY }}
           username: ${{ secrets.B2P_DEVOPS_ACR_USER }}
           password: ${{ secrets.B2P_DEVOPS_ACR_TOKEN }}
+          
+      - name: AddAPK
+        run: apk --no-cache add git jq tar docker
           
       - name: RemoveFilesBeforeBuild
         run:
