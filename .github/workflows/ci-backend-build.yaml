@@ -12,6 +12,12 @@ jobs:
         options: --privileged
     steps:
       - run: cat /etc/os-release
+      
+      - name: Update Repo
+        run: apk update && apk upgrade
+
+      - name: AddAPK
+        run: apk --no-cache add git jq tar openssh      
 
       - name: CheckOut
         uses: actions/checkout@v3
@@ -76,8 +82,6 @@ jobs:
           login-server: ${{ secrets.B2P_DEVOPS_ACR_REGISTRY }}
           username: ${{ secrets.B2P_DEVOPS_ACR_USER }}
           password: ${{ secrets.B2P_DEVOPS_ACR_TOKEN }}
-          
-      - run: cat /etc/os-release
           
       - name: RemoveFilesBeforeBuild
         run:
