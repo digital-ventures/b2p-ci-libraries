@@ -14,6 +14,9 @@ jobs:
     steps:
       - run: echo "🎉 This job uses runner scale set runners!"  
 
+      - name: AddAPK
+        run: apk --no-cache add git jq tar docker
+
       - name: CheckOut
         uses: actions/checkout@v3
         with: 
