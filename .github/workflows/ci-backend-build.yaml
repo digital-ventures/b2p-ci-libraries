@@ -6,8 +6,9 @@ jobs:
     if: "!contains(github.ref_name, '-AWS')"
     # runs-on: ubuntu-latest
     runs-on: arc-runner-set
-    container: openjdk:17-jdk-alpine3.14
+    #container: openjdk:17-jdk-alpine3.14
     steps:
+      - run: echo "🎉 This job uses runner scale set runners!"  
       - name: Update Repo
         run: apk update && apk upgrade
 
