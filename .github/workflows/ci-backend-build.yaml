@@ -12,7 +12,7 @@ jobs:
         image: openjdk:17-jdk-alpine3.14
         options: --privileged
     steps:
-      - run: echo "🎉 This job uses runner scale set runners!"  
+      - run: cat /etc/os-release
 
       - name: CheckOut
         uses: actions/checkout@v3
@@ -78,8 +78,7 @@ jobs:
           username: ${{ secrets.B2P_DEVOPS_ACR_USER }}
           password: ${{ secrets.B2P_DEVOPS_ACR_TOKEN }}
           
-      - name: AddAPK
-        run: apk --no-cache add git jq tar docker
+      - run: cat /etc/os-release
           
       - name: RemoveFilesBeforeBuild
         run:
