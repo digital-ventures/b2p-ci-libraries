@@ -11,6 +11,9 @@ jobs:
     container:
         image: openjdk:17-jdk-alpine3.14
         options: --privileged
+    env:
+      AZURE_USERNAME: ${{ secrets.B2P_ACR_USER }}
+      AZURE_PASSWORD: ${{ secrets.B2P_ACR_TOKEN }}
     steps:
       - run: cat /etc/os-release
 
