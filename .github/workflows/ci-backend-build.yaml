@@ -129,5 +129,5 @@ jobs:
           gradle-version: 7.2
           arguments: |
               jib
-              --image=${{ secrets.B2P_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }} --debug
+              --image=${{ secrets.B2P_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
 
