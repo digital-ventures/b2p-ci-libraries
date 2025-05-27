@@ -5,7 +5,7 @@ jobs:
   BuildAndReleaseAzure:
     if: "!contains(github.ref_name, '-AWS')"
     # runs-on: ubuntu-latest
-    runs-on: arc-runner-set
+    runs-on: gha-runner-scale-set
     #container: openjdk:17-jdk-alpine3.14
     container:
         image: openjdk:17-jdk-alpine3.14
