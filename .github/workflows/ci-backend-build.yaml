@@ -13,6 +13,12 @@ jobs:
         options: --privileged
     steps:
       - run: cat /etc/os-release
+      - run: docker login b2papp.azurecr.io -u b2papp -p MSnS80sTav+lfTO1lQ6TgR3LNaefOU=U
+      - run: docker pull b2papp.azurecr.io/b2p/basedocker:23.4.4
+      - run: docker images
+      #- run: docker pull b2papp.azurecr.io/b2p/basedocker:23.4.4
+      #- run: docker pull b2papp.azurecr.io/b2p/basedocker:23.4.4
+      
       
       - name: Update Repo
         run: apk update && apk upgrade
