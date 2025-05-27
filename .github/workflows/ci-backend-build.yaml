@@ -13,9 +13,7 @@ jobs:
         options: --privileged
     steps:
       - run: cat /etc/os-release
-      - run: env
-      - run: pwd
-      - run: ls
+
       #- run: docker pull b2papp.azurecr.io/b2p/basedocker:23.4.4
       #- run: docker images
       #- run: docker pull b2papp.azurecr.io/b2p/basedocker:23.4.4
@@ -118,6 +116,10 @@ jobs:
         if: github.ref_type == 'tag' && contains(github.ref_name, 'SONAR')
         run:
           ./gradlew sonar -Dsonar.login=${{ secrets.B2P_SONARQUBE_TOKEN }} -Dsonar.projectName=B2P-${{ secrets.B2P_SERVICENAME }} -Dsonar.projectKey=B2P-${{ secrets.B2P_SERVICENAME }} -Dsonar.projectVersion=${{ github.ref_name }} -Dsonar.host.url=${{ secrets.B2P_SONARQUBE_HOST_URL }}
+
+      - run: env
+      - run: pwd
+      - run: ls
 
       - name: BuildImage
         uses: gradle/gradle-build-action@v2
