@@ -20,11 +20,11 @@ jobs:
       #- run: docker pull b2papp.azurecr.io/b2p/basedocker:23.4.4
       
       
-      #- name: Update Repo
-      #  run: apk update && apk upgrade
+      - name: Update Repo
+        run: apk update && apk upgrade
 
-      #- name: AddAPK
-      #  run: apk --no-cache add git jq tar openssh      
+      - name: AddAPK
+        run: apk --no-cache add git jq tar openssh      
 
       - name: CheckOut
         uses: actions/checkout@v3
