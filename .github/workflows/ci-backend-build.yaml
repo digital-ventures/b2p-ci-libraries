@@ -13,17 +13,12 @@ jobs:
         options: --privileged
     steps:
       - run: cat /etc/os-release
-
-      - name: DockerLogin
-        uses: azure/docker-login@v1
-        with:
-          login-server: ${{ secrets.B2P_ACR_REGISTRY }}
-          username: ${{ secrets.B2P_ACR_USER }}
-          password: ${{ secrets.B2P_ACR_TOKEN }}
-          
-      - run: cat /etc/os-release
-      - run: docker pull b2papp.azurecr.io/b2p/basedocker:23.4.4
-      - run: docker images
+      - run: apk add docker
+      - run: env
+      - run: pwd
+      - run: ls
+      #- run: docker pull b2papp.azurecr.io/b2p/basedocker:23.4.4
+      #- run: docker images
       #- run: docker pull b2papp.azurecr.io/b2p/basedocker:23.4.4
       #- run: docker pull b2papp.azurecr.io/b2p/basedocker:23.4.4
       
