@@ -79,9 +79,9 @@ jobs:
       - name: DockerLogin
         uses: azure/docker-login@v1
         with:
-          login-server: ${{ secrets.B2P_DEVOPS_ACR_REGISTRY }}
-          username: ${{ secrets.B2P_DEVOPS_ACR_USER }}
-          password: ${{ secrets.B2P_DEVOPS_ACR_TOKEN }}
+          login-server: ${{ secrets.B2P_ACR_REGISTRY }}
+          username: ${{ secrets.B2P_ACR_USER }}
+          password: ${{ secrets.B2P_ACR_TOKEN }}
           
       - name: RemoveFilesBeforeBuild
         run:
