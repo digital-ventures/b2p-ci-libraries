@@ -5,7 +5,8 @@ jobs:
   BuildAndReleaseAzure:
     if: "!contains(github.ref_name, '-AWS')"
     # runs-on: ubuntu-latest
-    runs-on: gha-runner-scale-set
+    # runs-on: gha-runner-scale-set
+    runs-on: arc-runner-set
     container: openjdk:17-jdk-alpine3.14
     steps:
       - name: Update Repo
