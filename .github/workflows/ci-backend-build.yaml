@@ -7,27 +7,13 @@ jobs:
     # runs-on: ubuntu-latest
     # runs-on: gha-runner-scale-set
     runs-on: arc-runner-set
-    # container: openjdk:17-jdk-alpine3.14
-    container:
-        image: openjdk:17-jdk-alpine3.14
-        options: --privileged
-    env:
-      AZURE_USERNAME: ${{ secrets.B2P_ACR_USER }}
-      AZURE_PASSWORD: ${{ secrets.B2P_ACR_TOKEN }}
+    container: openjdk:17-jdk-alpine3.14
     steps:
-      - run: cat /etc/os-release
-
-      #- run: docker pull b2papp.azurecr.io/b2p/basedocker:23.4.4
-      #- run: docker images
-      #- run: docker pull b2papp.azurecr.io/b2p/basedocker:23.4.4
-      #- run: docker pull b2papp.azurecr.io/b2p/basedocker:23.4.4
-      
-      
       - name: Update Repo
         run: apk update && apk upgrade
 
       - name: AddAPK
-        run: apk --no-cache add git jq tar openssh      
+        run: apk --no-cache add git jq tar openssh
 
       - name: CheckOut
         uses: actions/checkout@v3
