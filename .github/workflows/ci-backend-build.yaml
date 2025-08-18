@@ -126,8 +126,6 @@ jobs:
           arguments: |
               jib
               --image=${{ secrets.B2P_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
-              jib
-              --image=${{ secrets.B2P_ACR_REGISTRY_TEMP }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
 
       - name: BuildImage_To_ACR_Temp
         uses: gradle/gradle-build-action@v2
