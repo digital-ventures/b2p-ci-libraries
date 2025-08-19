@@ -75,7 +75,7 @@ jobs:
 
           echo "push to temp ACR B2P"
           docker images
-          docker tag -t ${{ secrets.B2P_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }} ${{ secrets.B2P_ACR_REGISTRY_TEMP }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
+          docker tag ${{ secrets.B2P_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }} ${{ secrets.B2P_ACR_REGISTRY_TEMP }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
           docker push ${{ secrets.B2P_ACR_REGISTRY_TEMP }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
 
 
