@@ -72,6 +72,9 @@ jobs:
           echo ${{ github.ref_name }} > ./src/version.txt  #add content in /version page
           docker build --ssh default -t ${{ secrets.B2P_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }} .
           docker push ${{ secrets.B2P_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
+          docker tag -t ${{ secrets.B2P_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }} ${{ secrets.B2P_ACR_REGISTRY_TEMP }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
+          docker push ${{ secrets.B2P_ACR_REGISTRY_TEMP }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
+
 
       - name: ImageDigest
         run: echo -e "\e[92m ${{ steps.docker_build.outputs.digest }} \e[0m"
