@@ -44,6 +44,13 @@ jobs:
           username: ${{ secrets.B2P_ACR_USER }}
           password: ${{ secrets.B2P_ACR_TOKEN }}
 
+      - name: DockerLogin_temp_acr
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ secrets.B2P_ACR_REGISTRY_TEMP }}
+          username: ${{ secrets.B2P_ACR_USER_TEMP }}
+          password: ${{ secrets.B2P_ACR_TOKEN_TEMP }}
+
       # - name: BuildAndPush
       #   if: "!contains(github.ref_name, 'SONAR')"
       #   uses: docker/build-push-action@v3
