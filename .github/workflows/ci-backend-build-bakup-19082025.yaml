@@ -78,13 +78,6 @@ jobs:
           login-server: ${{ secrets.B2P_ACR_REGISTRY }}
           username: ${{ secrets.B2P_ACR_USER }}
           password: ${{ secrets.B2P_ACR_TOKEN }}
-
-      - name: DockerLogin_temp_acr
-        uses: azure/docker-login@v1
-        with:
-          login-server: ${{ secrets.B2P_ACR_REGISTRY_TEMP }}
-          username: ${{ secrets.B2P_ACR_USER_TEMP }}
-          password: ${{ secrets.B2P_ACR_TOKEN_TEMP }}
           
       - name: RemoveFilesBeforeBuild
         run:
@@ -126,13 +119,3 @@ jobs:
           arguments: |
               jib
               --image=${{ secrets.B2P_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
-
-      - name: BuildImage_To_ACR_Temp
-        uses: gradle/gradle-build-action@v2
-        if: "!contains(github.ref_name, 'SONAR')"
-        with:
-          gradle-version: 7.2
-          arguments: |
-              jib
-              --image=${{ secrets.B2P_ACR_REGISTRY_TEMP }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
-
