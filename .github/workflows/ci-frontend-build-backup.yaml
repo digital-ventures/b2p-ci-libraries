@@ -44,13 +44,6 @@ jobs:
           username: ${{ secrets.B2P_ACR_USER }}
           password: ${{ secrets.B2P_ACR_TOKEN }}
 
-      - name: DockerLogin_temp_acr
-        uses: azure/docker-login@v1
-        with:
-          login-server: ${{ secrets.B2P_ACR_REGISTRY_TEMP }}
-          username: ${{ secrets.B2P_ACR_USER_TEMP }}
-          password: ${{ secrets.B2P_ACR_TOKEN_TEMP }}
-
       # - name: BuildAndPush
       #   if: "!contains(github.ref_name, 'SONAR')"
       #   uses: docker/build-push-action@v3
@@ -79,12 +72,6 @@ jobs:
           echo ${{ github.ref_name }} > ./src/version.txt  #add content in /version page
           docker build --ssh default -t ${{ secrets.B2P_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }} .
           docker push ${{ secrets.B2P_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
-
-          echo "push to temp ACR B2P"
-          docker images
-          docker tag ${{ secrets.B2P_ACR_REGISTRY }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }} ${{ secrets.B2P_ACR_REGISTRY_TEMP }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
-          docker push ${{ secrets.B2P_ACR_REGISTRY_TEMP }}/b2p/${{ secrets.B2P_SERVICENAME }}:${{ github.ref_name }}
-
 
       - name: ImageDigest
         run: echo -e "\e[92m ${{ steps.docker_build.outputs.digest }} \e[0m"
