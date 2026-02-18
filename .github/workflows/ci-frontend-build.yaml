@@ -4,8 +4,8 @@ on:
 jobs:
   BuildAndReleaseAzure:
     if: "!contains(github.ref_name, '-AWS')"
-    runs-on: ubuntu-latest
-    #runs-on: arc-runner-set
+    #runs-on: ubuntu-latest
+    runs-on: arc-runner-set
     #container: openjdk:17-jdk-alpine3.14
     container:
       image: docker:20.10.21-alpine3.16
