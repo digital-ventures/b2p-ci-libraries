@@ -1,6 +1,8 @@
 name: Backend Build
 on:
   workflow_call:
+env:
+  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: "true"
 jobs:
   BuildAndReleaseAzure:
     if: "!contains(github.ref_name, '-AWS')"
